@@ -1,25 +1,29 @@
 node {
-    stage('Git SCM') { # Check out the source code from the repository defined in Jenkins.
+    stage('Git SCM') {
+        // Check out the source code from the repository defined in Jenkins.
         checkout scm
     }
     
     stage('Installing project dependencies and running a dependency scan using Snyk') {
-        withCredentials([string(credentialsId: 'token', variable: 'SNYK_TOKEN')]) { 
-            sh "npm install" # Install the project dependencies.
+        withCredentials([string(credentialsId: 'token', variable: 'SNYK_TOKEN')]) {
+            // Retrieve the Snyk token using the credential ID "token" stored in Jenkins.
+            sh "npm install" // Install the project dependencies.
 
             sh '''
                 export SNYK_TOKEN=$SNYK_TOKEN
-                snyk auth $SNYK_TOKEN > /dev/null 2>&1 # 
-                snyk monitor --org=a16b592a-4677-4b3c-ab8a-b034d23d37db 
+                snyk auth $SNYK_TOKEN > /dev/null 2>&1
+                snyk monitor --org=a16b592a-4677-4b3c-ab8a-b034d23d37db
             '''
         }
     }
 
     stage('Source Code Analysis using SonarQube') {
-       withCredentials([string(credentialsId: 'sonarqube', variable: 'envsonar')]) { 
-            def scannerHome = tool(name: 'SonarQube', type: 'hudson.plugins.sonar.SonarRunnerInstallation') # 
-            withSonarQubeEnv('envsonar') { # Set up the environment for SonarQube analysis using the retrieved credentials.
-                sh "${scannerHome}/bin/sonar-scanner" # Execute the SonarQube analysis.
+        withCredentials([string(credentialsId: 'sonarqube', variable: 'envsonar')]) {
+            // Retrieve SonarQube credentials using the credential ID "sonarqube" stored in Jenkins.
+            def scannerHome = tool(name: 'SonarQube', type: 'hudson.plugins.sonar.SonarRunnerInstallation')
+            withSonarQubeEnv('envsonar') {
+                // Set up the environment for SonarQube analysis using the retrieved credentials.
+                sh "${scannerHome}/bin/sonar-scanner" // Execute the SonarQube analysis.
             }
         }
     }
