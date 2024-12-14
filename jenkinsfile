@@ -16,8 +16,8 @@ node {
     }
 
     stage('Source Code Analysis using SonarQube') {
-       withCredentials([string(credentialsId: 'sonarqube', variable: 'envsonar')]) { # Retrieve SonarQube credentials using the credential ID "sonarqube" stored in Jenkins.
-            def scannerHome = tool(name: 'SonarQube', type: 'hudson.plugins.sonar.SonarRunnerInstallation') # Define the path to the SonarQube scanner, configured using the tool name in Jenkins.
+       withCredentials([string(credentialsId: 'sonarqube', variable: 'envsonar')]) { 
+            def scannerHome = tool(name: 'SonarQube', type: 'hudson.plugins.sonar.SonarRunnerInstallation') # 
             withSonarQubeEnv('envsonar') { # Set up the environment for SonarQube analysis using the retrieved credentials.
                 sh "${scannerHome}/bin/sonar-scanner" # Execute the SonarQube analysis.
             }
