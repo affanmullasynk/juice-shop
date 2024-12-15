@@ -27,7 +27,7 @@ node {
         // Use Jenkins credentials to fetch SonarQube token securely
         withCredentials([string(credentialsId: 'sonarqube', variable: 'SONAR_TOKEN')]) {
             // Define the SonarQube scanner tool
-            def scannerHome = tool(name: 'SonarQube', type: 'hudson.plugins.sonar.SonarRunnerInstallation')
+            def scannerHome = tool(name: 'Sonarqube', type: 'hudson.plugins.sonar.SonarRunnerInstallation')
 
             // Set up SonarQube environment and run scanner
             withSonarQubeEnv('SonarQubeServer') {
