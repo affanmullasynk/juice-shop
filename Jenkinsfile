@@ -25,7 +25,7 @@ node {
 
     stage('Source Code Analysis using SonarQube') {
         // Use Jenkins credentials to fetch SonarQube token securely
-        withCredentials([string(credentialsId: 'sonarqube', variable: 'SONAR_TOKEN')]) {
+        withCredentials([string(credentialsId: 'Sonarqube', variable: 'SONAR_TOKEN')]) {
             // Define the SonarQube scanner tool
             def scannerHome = tool(name: 'Sonarqube', type: 'hudson.plugins.sonar.SonarRunnerInstallation')
 
