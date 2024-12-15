@@ -8,7 +8,11 @@ node {
         // Use Jenkins credentials to fetch Snyk API token securely
         withCredentials([string(credentialsId: 'SYNK', variable: 'SNYK_TOKEN')]) {
             // Install project dependencies
-            sh "npm install"
+            sh '''
+                # Clean existing dependencies to avoid conflicts
+                rm -rf node_modules package-lock.json
+                npm install
+            '''
 
             // Authenticate and monitor project with Snyk
             sh '''
@@ -21,13 +25,17 @@ node {
 
     stage('Source Code Analysis using SonarQube') {
         // Use Jenkins credentials to fetch SonarQube token securely
-        withCredentials([string(credentialsId: 'sonarqube', variable: 'envsonar')]) {
+        withCredentials([string(credentialsId: 'sonarqube', variable: 'SONAR_TOKEN')]) {
             // Define the SonarQube scanner tool
             def scannerHome = tool(name: 'SonarQube', type: 'hudson.plugins.sonar.SonarRunnerInstallation')
-            
+
             // Set up SonarQube environment and run scanner
-            withSonarQubeEnv('envsonar') {
-                sh "${scannerHome}/bin/sonar-scanner"
+            withSonarQubeEnv('SonarQubeServer') {
+                sh '''
+                    export SONAR_TOKEN=$SONAR_TOKEN
+                    ${scannerHome}/bin/sonar-scanner \
+                    -Dsonar.login=$SONAR_TOKEN
+                '''
             }
         }
     }
