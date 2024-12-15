@@ -4,7 +4,7 @@ node {
     }
     
     stage('Installing project dependencies and running a dependency scan using Snyk') {
-        withCredentials([string(credentialsId: 'token', variable: 'SNYK_TOKEN')]) {
+        withCredentials([string(credentialsId: 'SYNK', variable: 'SNYK_TOKEN')]) {
             sh "npm install"
             sh '''
                 export SNYK_TOKEN=$SNYK_TOKEN
