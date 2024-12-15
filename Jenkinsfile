@@ -23,19 +23,11 @@ node {
         }
     }
 
-    stage('Source Code Analysis using SonarQube') {
-        // Use Jenkins credentials to fetch SonarQube token securely
-        withCredentials([string(credentialsId: 'Sonarqube', variable: 'SONAR_TOKEN')]) {
-            // Define the SonarQube scanner tool
-            def scannerHome = tool(name: 'Sonarqube', type: 'hudson.plugins.sonar.SonarRunnerInstallation')
-
-            // Set up SonarQube environment and run scanner
-            withSonarQubeEnv('SonarQubeServer') {
-                sh '''
-                    export SONAR_TOKEN=$SONAR_TOKEN
-                    ${scannerHome}/bin/sonar-scanner \
-                    -Dsonar.login=$SONAR_TOKEN
-                '''
+      stage('Source Code Analysis using SonarQube') {
+       withCredentials([string(credentialsId: 'Sonarqube', variable: 'envsonar')]) { 
+            def scannerHome = tool(name: 'SonarQube', type: 'hudson.plugins.sonar.SonarRunnerInstallation') 
+            withSonarQubeEnv('envsonar') { 
+                sh "${scannerHome}/bin/sonar-scanner" # Execute the SonarQube analysis.
             }
         }
     }
