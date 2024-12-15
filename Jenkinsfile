@@ -27,7 +27,7 @@ node {
        withCredentials([string(credentialsId: 'Sonarqube', variable: 'envsonar')]) { 
             def scannerHome = tool(name: 'SonarQube', type: 'hudson.plugins.sonar.SonarRunnerInstallation') 
             withSonarQubeEnv('envsonar') { 
-                sh "${scannerHome}/bin/sonar-scanner" # Execute the SonarQube analysis.
+                sh "${scannerHome}/bin/sonar-scanner" 
             }
         }
     }
